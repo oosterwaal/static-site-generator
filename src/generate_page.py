@@ -3,7 +3,7 @@ from block_markdown import markdown_to_html_node
 from extract_title import extract_title
 
 
-def generate_page(from_path, template_path, dest_path):
+def generate_page(from_path, template_path, dest_path, basepath="/"):
     print(f"Generating page from {from_path} to {dest_path} using {template_path}")
     
     # Read the markdown file
@@ -24,6 +24,12 @@ def generate_page(from_path, template_path, dest_path):
     # Replace placeholders in template
     full_html = template_content.replace("{{ Title }}", title)
     full_html = full_html.replace("{{ Content }}", html_content)
+    
+    # Replace absolute paths with basepath
+    if basepath != "/":
+        # Only replace if basepath is not the default "/"
+        full_html = full_html.replace('href="/', f'href="{basepath}')
+        full_html = full_html.replace('src="/', f'src="{basepath}')
     
     # Create destination directory if it doesn't exist
     dest_dir = os.path.dirname(dest_path)
